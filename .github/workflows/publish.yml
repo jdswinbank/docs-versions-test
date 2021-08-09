@@ -16,11 +16,16 @@ jobs:
       - name: Build documentation
         run: sphinx-build -b html -W . _build/html
         working-directory: docs
+      - name: Set target directory
+        id: target
+        run: |
+          TARGET_DIR=$(echo ${GITHUB_REF} | sed -E -e's\refs/(tags|heads)/\\')
+          echo "::set-output name=target_dir::${TARGET_DIR}"
       - name: Deploy to GitHub Pages
-        if: success()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          target_branch: gh-pages
+          publish_branch: gh-pages
           publish_dir: docs/_build/html
+          destination_dir: ${{ steps.target.outputs.target_dir }}
           enable_jekyll: false
