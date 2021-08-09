@@ -1,1 +1,3 @@
+sphinx
 furo
+docs_versions_menu
